@@ -12,7 +12,11 @@ export default function InputPanel({
     <div className="panel">
       <div className="panel-header">
         <span>Wire Groups</span>
-        <div className="controls-row" style={{ margin: 0 }}>
+      </div>
+
+      <div className="panel-body">
+        {/* ── Top controls: brand + environment ── */}
+        <div className="controls-row">
           <div className="control-group">
             <label>Manufacturer</label>
             <select value={brand} onChange={e => onBrandChange(e.target.value)}>
@@ -36,76 +40,77 @@ export default function InputPanel({
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="panel-body">
-        <table className="wire-table">
-          <thead>
-            <tr>
-              <th style={{ width: '22%' }}>Group Name</th>
-              <th style={{ width: '14%' }}>Wire Count</th>
-              <th style={{ width: '16%' }}>Current (A)</th>
-              <th style={{ width: '16%' }}>Gauge (AWG)</th>
-              <th style={{ width: '4%' }}></th>
-            </tr>
-          </thead>
-          <tbody>
-            {wireGroups.map(g => (
-              <tr key={g.id}>
-                <td>
-                  <input
-                    type="text"
-                    value={g.name}
-                    placeholder="e.g. Signal"
-                    onChange={e => onUpdateGroup(g.id, 'name', e.target.value)}
-                    onKeyDown={handleKeyDown}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="1"
-                    value={g.count}
-                    onChange={e => onUpdateGroup(g.id, 'count', parseInt(e.target.value) || 0)}
-                    onKeyDown={handleKeyDown}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.1"
-                    value={g.currentA}
-                    onChange={e => onUpdateGroup(g.id, 'currentA', parseFloat(e.target.value) || 0)}
-                    onKeyDown={handleKeyDown}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="optional"
-                    value={g.gaugeAWG ?? ''}
-                    onChange={e => {
-                      const v = e.target.value;
-                      onUpdateGroup(g.id, 'gaugeAWG', v === '' ? null : parseInt(v));
-                    }}
-                    onKeyDown={handleKeyDown}
-                  />
-                </td>
-                <td>
-                  <button className="row-remove" onClick={() => onRemoveGroup(g.id)} title="Remove group">&times;</button>
-                </td>
+        {/* ── Wire group table ── */}
+        <div className="wire-table-wrap">
+          <table className="wire-table">
+            <thead>
+              <tr>
+                <th style={{ width: '28%' }}>Group Name</th>
+                <th style={{ width: '16%' }}>Wire Count</th>
+                <th style={{ width: '18%' }}>Current (A)</th>
+                <th style={{ width: '18%' }}>Gauge (AWG)</th>
+                <th style={{ width: '5%' }}></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {wireGroups.map(g => (
+                <tr key={g.id}>
+                  <td>
+                    <input
+                      type="text"
+                      value={g.name}
+                      placeholder="e.g. Signal"
+                      onChange={e => onUpdateGroup(g.id, 'name', e.target.value)}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="1"
+                      value={g.count}
+                      onChange={e => onUpdateGroup(g.id, 'count', parseInt(e.target.value) || 0)}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      value={g.currentA}
+                      onChange={e => onUpdateGroup(g.id, 'currentA', parseFloat(e.target.value) || 0)}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="optional"
+                      value={g.gaugeAWG ?? ''}
+                      onChange={e => {
+                        const v = e.target.value;
+                        onUpdateGroup(g.id, 'gaugeAWG', v === '' ? null : parseInt(v));
+                      }}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </td>
+                  <td>
+                    <button className="row-remove" onClick={() => onRemoveGroup(g.id)} title="Remove group">&times;</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-        <button className="btn-add" onClick={onAddGroup}>+ Add Group</button>
+        <div className="input-footer">
+          <button className="btn-add" onClick={onAddGroup}>+ Add Group</button>
 
-        <div className="controls-row" style={{ marginTop: 12 }}>
-          <div className="control-group">
-            <label>Exclude keyways:</label>
+          <div className="keyway-row">
+            <label className="keyway-label">Exclude keyways</label>
             <div className="keyway-exclusions">
               {keyways.map(k => (
                 <label key={k.code} className="keyway-check">
@@ -124,9 +129,7 @@ export default function InputPanel({
             </div>
           </div>
 
-          <div style={{ marginLeft: 'auto' }}>
-            <button className="btn-find" onClick={onFind}>Find Connectors</button>
-          </div>
+          <button className="btn-find" onClick={onFind}>Find Connectors</button>
         </div>
       </div>
     </div>

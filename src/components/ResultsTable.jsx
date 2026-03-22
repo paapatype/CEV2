@@ -19,13 +19,16 @@ export default function ResultsTable({ results, expandedRow, onToggleExpand, exc
     <div className="panel">
       <div className="panel-header">
         <span>Results</span>
-        <div className="results-summary">
-          <span>Require: <strong style={{ fontFamily: 'var(--font-mono)' }}>
-            {contactsStr(required_contacts)}
-          </strong></span>
-          <span>({total_contacts_needed} contacts)</span>
-          <span>{result_count} layout{result_count !== 1 ? 's' : ''} found</span>
-        </div>
+      </div>
+
+      <div className="results-summary">
+        <span>Require: <strong style={{ fontFamily: 'var(--font-mono)' }}>
+          {contactsStr(required_contacts)}
+        </strong></span>
+        <span className="results-sep">&middot;</span>
+        <span>{total_contacts_needed} contacts</span>
+        <span className="results-sep">&middot;</span>
+        <span><strong>{result_count}</strong> layout{result_count !== 1 ? 's' : ''} found</span>
       </div>
 
       {result_count === 0 ? (
@@ -34,36 +37,38 @@ export default function ResultsTable({ results, expandedRow, onToggleExpand, exc
           Try reducing contact count, changing manufacturer, or disabling fuel-immersible filter.
         </div>
       ) : (
-        <table className="results-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Shell-Layout</th>
-              <th>Manufacturer</th>
-              <th>Contact Distribution</th>
-              <th>Used/Total</th>
-              <th>Spares</th>
-              <th>Fit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r, i) => {
-              const key = `${r.brand}-${r.shell_size}-${r.layout_number}`;
-              const isExpanded = expandedRow === i;
-              return (
-                <tr key={key} className={isExpanded ? 'expanded' : ''} onClick={() => onToggleExpand(i)}>
-                  <td>{i + 1}</td>
-                  <td><span className="result-shell">{r.shell_size}-{r.layout_number}</span></td>
-                  <td><span className="result-brand">{r.brand_label}</span></td>
-                  <td><span className="result-contacts">{contactsStr(r.contacts)}</span></td>
-                  <td>{r.total_required}/{r.total_contacts}</td>
-                  <td>{r.spares}</td>
-                  <td><span className={tagClass(r.tag)}>{r.tag}</span></td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="results-table-wrap">
+          <table className="results-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Shell-Layout</th>
+                <th>Manufacturer</th>
+                <th>Contact Distribution</th>
+                <th>Used / Total</th>
+                <th>Spares</th>
+                <th>Fit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r, i) => {
+                const key = `${r.brand}-${r.shell_size}-${r.layout_number}`;
+                const isExpanded = expandedRow === i;
+                return (
+                  <tr key={key} className={isExpanded ? 'expanded' : ''} onClick={() => onToggleExpand(i)}>
+                    <td>{i + 1}</td>
+                    <td><span className="result-shell">{r.shell_size}-{r.layout_number}</span></td>
+                    <td><span className="result-brand">{r.brand_label}</span></td>
+                    <td><span className="result-contacts">{contactsStr(r.contacts)}</span></td>
+                    <td>{r.total_required} / {r.total_contacts}</td>
+                    <td>{r.spares}</td>
+                    <td><span className={tagClass(r.tag)}>{r.tag}</span></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
 
       {expandedRow != null && rows[expandedRow] && (
