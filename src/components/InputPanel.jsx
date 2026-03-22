@@ -41,8 +41,8 @@ export default function InputPanel({
           </div>
         </div>
 
-        {/* ── Wire group table ── */}
-        <div className="wire-table-wrap">
+        {/* ── Desktop: table layout ── */}
+        <div className="wire-table-wrap desktop-only">
           <table className="wire-table">
             <thead>
               <tr>
@@ -104,6 +104,64 @@ export default function InputPanel({
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* ── Mobile: stacked card layout ── */}
+        <div className="wire-cards mobile-only">
+          {wireGroups.map(g => (
+            <div key={g.id} className="wire-card">
+              <div className="wire-card-top">
+                <div className="wire-card-field wire-card-field-full">
+                  <label>Group Name</label>
+                  <input
+                    type="text"
+                    value={g.name}
+                    placeholder="e.g. Signal"
+                    onChange={e => onUpdateGroup(g.id, 'name', e.target.value)}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+                <button className="row-remove" onClick={() => onRemoveGroup(g.id)} title="Remove group">&times;</button>
+              </div>
+              <div className="wire-card-fields">
+                <div className="wire-card-field">
+                  <label>Wire Count</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={g.count}
+                    onChange={e => onUpdateGroup(g.id, 'count', parseInt(e.target.value) || 0)}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+                <div className="wire-card-field">
+                  <label>Current (A)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={g.currentA}
+                    onChange={e => onUpdateGroup(g.id, 'currentA', parseFloat(e.target.value) || 0)}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+                <div className="wire-card-field">
+                  <label>Gauge (AWG)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="optional"
+                    value={g.gaugeAWG ?? ''}
+                    onChange={e => {
+                      const v = e.target.value;
+                      onUpdateGroup(g.id, 'gaugeAWG', v === '' ? null : parseInt(v));
+                    }}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="input-footer">

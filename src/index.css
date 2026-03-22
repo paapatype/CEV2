@@ -914,36 +914,132 @@ input::placeholder {
 ::-webkit-scrollbar-thumb:hover { background: var(--bg-active); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE WIRE CARDS (hidden on desktop, shown on mobile)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mobile-only { display: none; }
+.desktop-only { display: block; }
+
+.wire-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.wire-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+}
+
+.wire-card-top {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.wire-card-top .wire-card-field-full { flex: 1; }
+
+.wire-card-top .row-remove {
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}
+
+.wire-card-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sp-3);
+}
+
+.wire-card-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.wire-card-field label {
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.wire-card-field input {
+  text-align: center;
+  width: 100%;
+}
+
+.wire-card-field-full label {
+  text-align: left;
+}
+
+.wire-card-field-full input {
+  text-align: left;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLL INDICATOR (visible scroll track for scrollable areas on mobile)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.scroll-hint {
+  position: relative;
+}
+
+.scroll-hint::after {
+  content: 'Scroll \2192';
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-disabled);
+  padding: var(--sp-2) var(--sp-3);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Touch devices: bigger targets ── */
 @media (pointer: coarse) {
   select, input[type="text"], input[type="number"] {
-    height: 44px;
-    font-size: 16px;  /* prevents iOS auto-zoom */
+    height: 48px;
+    font-size: 16px;
     padding: 0 var(--sp-4);
   }
-  .toggle-group button { padding: var(--sp-3) var(--sp-4); font-size: 13px; }
-  .btn-find { height: 48px; font-size: 15px; padding: 0 var(--sp-6); }
-  .btn-add { height: 44px; }
+  .toggle-group button { padding: var(--sp-3) var(--sp-4); font-size: 14px; }
+  .btn-find { height: 52px; font-size: 16px; padding: 0 var(--sp-6); }
+  .btn-add { height: 48px; font-size: 14px; }
   .wire-table .row-remove { width: 44px; height: 44px; font-size: 22px; }
-  .keyway-check input[type="checkbox"] { width: 20px; height: 20px; }
-  .keyway-check { gap: var(--sp-2); }
+  .wire-card .row-remove { width: 44px; height: 44px; font-size: 22px; }
+  .keyway-check input[type="checkbox"] { width: 22px; height: 22px; }
+  .keyway-check { gap: var(--sp-2); font-size: 14px; }
+  .keyway-dot { width: 12px; height: 12px; }
   .results-table td { padding: var(--sp-4) var(--sp-3); }
-  .mode-tab { padding: var(--sp-3) var(--sp-4); }
+  .mode-tab { padding: var(--sp-3) var(--sp-4); font-size: 14px; }
 }
 
-/* ── Tablet (≤ 768px) ── */
+/* ── Tablet & Phone (≤ 768px) ── */
 @media (max-width: 768px) {
-  .app {
-    padding: var(--sp-5) var(--sp-4);
-  }
+  html { font-size: 15px; }
 
-  .app-header { margin-bottom: var(--sp-6); }
-  .app-header h1 { font-size: 20px; }
+  .app { padding: var(--sp-5) var(--sp-4); }
+
+  .app-header { margin-bottom: var(--sp-5); }
+  .app-header h1 { font-size: 22px; }
+  .app-header .subtitle { font-size: 14px; color: var(--text-secondary); }
 
   .mode-tabs { gap: 2px; margin-bottom: var(--sp-5); }
+
+  /* Show mobile cards, hide desktop table */
+  .mobile-only { display: block; }
+  .desktop-only { display: none; }
 
   .panel { margin-bottom: var(--sp-5); }
   .panel-header {
@@ -952,6 +1048,7 @@ input::placeholder {
     gap: var(--sp-2);
     padding: var(--sp-4);
   }
+  .panel-header span { font-size: 14px; }
   .panel-body { padding: var(--sp-4); }
 
   .controls-row {
@@ -959,14 +1056,17 @@ input::placeholder {
     align-items: stretch;
     gap: var(--sp-4);
   }
-  .control-group { align-items: stretch; }
+  .control-group {
+    align-items: stretch;
+    gap: var(--sp-2);
+  }
+  .control-group label { font-size: 13px; }
   .control-group select,
   .control-group input { width: 100%; }
 
   .toggle-group { width: 100%; }
   .toggle-group button { flex: 1; text-align: center; }
 
-  .wire-table { min-width: 440px; }
   input[type="number"], input[type="text"] { width: 100%; }
 
   .input-footer {
@@ -974,15 +1074,48 @@ input::placeholder {
     align-items: stretch;
     gap: var(--sp-4);
   }
+  .btn-add { width: 100%; }
   .keyway-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--sp-2);
+    gap: var(--sp-3);
   }
+  .keyway-label { font-size: 13px; }
+  .keyway-exclusions { gap: var(--sp-3); }
   .btn-find { width: 100%; margin-left: 0; }
 
-  .results-summary { flex-wrap: wrap; padding: var(--sp-3) var(--sp-4); }
-  .results-table { min-width: 560px; }
+  /* Results table — scrollable with visible indicator */
+  .results-summary {
+    flex-wrap: wrap;
+    padding: var(--sp-3) var(--sp-4);
+    font-size: 13px;
+  }
+
+  .results-table-wrap {
+    position: relative;
+    /* Fade hint on right edge to show more content */
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  }
+
+  /* Force visible scrollbar on mobile */
+  .results-table-wrap::-webkit-scrollbar { height: 8px; }
+  .results-table-wrap::-webkit-scrollbar-track {
+    background: var(--bg-elevated);
+    border-radius: 4px;
+    margin: 0 var(--sp-4);
+  }
+  .results-table-wrap::-webkit-scrollbar-thumb {
+    background: var(--bg-active);
+    border-radius: 4px;
+  }
+
+  .results-table { min-width: 600px; }
+  .results-table th { font-size: 12px; }
+  .results-table td { font-size: 14px; }
+  .result-brand { font-size: 13px; }
+  .result-contacts { font-size: 12px; }
+  .tag { font-size: 12px; padding: 3px var(--sp-3); }
 
   .detail-view {
     grid-template-columns: 1fr;
@@ -990,33 +1123,48 @@ input::placeholder {
     gap: var(--sp-5);
   }
   .detail-section.full-width { grid-column: 1; }
+  .detail-label { font-size: 12px; }
+  .detail-value { font-size: 14px; }
 
-  .gauge-row { flex-wrap: wrap; gap: var(--sp-1); }
-  .gauge-row .group-name { min-width: unset; width: 100%; }
+  .gauge-row {
+    flex-wrap: wrap;
+    gap: var(--sp-1);
+    font-size: 13px;
+    padding: var(--sp-3) 0;
+  }
+  .gauge-row .group-name { min-width: unset; width: 100%; font-size: 14px; }
+
+  .bom-grid { font-size: 14px; gap: var(--sp-2) var(--sp-5); }
+  .bom-grid dt { font-size: 13px; }
+
+  .variant-badge { font-size: 12px; height: 30px; padding: 0 var(--sp-3); }
+  .keyway-item { height: 32px; font-size: 12px; padding: 0 var(--sp-3); }
+
+  .pn-segment-value { font-size: 15px; height: 36px; min-width: 36px; }
+  .pn-segment-label { font-size: 10px; }
 
   .xref-exact-header { flex-direction: column; gap: var(--sp-1); }
   .xref-compare-table { display: block; overflow-x: auto; }
-  .xref-section-header { flex-direction: column; align-items: flex-start; gap: var(--sp-2); }
+  .xref-compare-table th { font-size: 12px; }
+  .xref-compare-table td { font-size: 14px; }
+  .xref-section-header { flex-direction: column; align-items: flex-start; gap: var(--sp-2); font-size: 13px; }
+  .xref-badge { font-size: 11px; }
   .xref-section { padding: var(--sp-4); }
-  .xref-warning { margin: var(--sp-4); }
+  .xref-warning { margin: var(--sp-4); font-size: 14px; }
+  .xref-interop-badge { font-size: 13px; }
   .xref-exact-card { padding: var(--sp-4); }
+  .xref-exact-title { font-size: 18px; }
+
+  .empty-state { font-size: 14px; }
 }
 
-/* ── Phone (≤ 480px) ── */
-@media (max-width: 480px) {
-  html { font-size: 13px; }
+/* ── Small phone (≤ 400px) ── */
+@media (max-width: 400px) {
   .app { padding: var(--sp-4) var(--sp-3); }
-  .app-header h1 { font-size: 18px; }
-  .app-header .subtitle { font-size: 12px; }
 
-  .mode-tabs { gap: 2px; }
+  .wire-card-fields {
+    grid-template-columns: 1fr 1fr;
+  }
 
-  .panel-body { padding: var(--sp-3); }
-  .wire-table { min-width: 380px; }
-  .results-table { min-width: 480px; }
-
-  .detail-view { padding: var(--sp-4) var(--sp-3); gap: var(--sp-4); }
-  .pn-segment-value { height: 28px; font-size: 12px; min-width: 28px; }
-  .keyway-item { height: 24px; font-size: 10px; }
-  .variant-badge { height: 24px; font-size: 10px; }
+  .results-table { min-width: 520px; }
 }
