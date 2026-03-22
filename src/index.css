@@ -1004,7 +1004,7 @@ input::placeholder {
   .app-header h1 { font-size: 18px; }
   .app-header .subtitle { font-size: 12px; }
 
-  .mode-tabs { flex-direction: column; gap: 2px; }
+  .mode-tabs { gap: 2px; }
 
   .panel-body { padding: var(--sp-3); }
   .wire-table { min-width: 380px; }
