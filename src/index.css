@@ -617,44 +617,138 @@ input::placeholder {
 
 .detail-label {
   font-family: var(--font);
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--text-muted);
-  margin-bottom: var(--sp-2);
+  margin-bottom: var(--sp-3);
+  letter-spacing: 0.01em;
 }
 
 .detail-value {
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-primary);
-  line-height: 1.7;
+  line-height: 1.6;
+}
+
+.detail-value-lg {
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .detail-value .secondary { color: var(--text-secondary); }
+.detail-value strong { font-weight: 600; }
 
-/* ── Gauge rows ── */
-
-.gauge-row {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-2) 0;
-  font-family: var(--mono);
-  font-size: 12px;
-}
-
-.gauge-row + .gauge-row { border-top: 1px solid var(--border-subtle); }
-
-.gauge-row .group-name {
+.detail-sub {
   font-family: var(--font);
+  font-size: 13px;
   color: var(--text-secondary);
-  font-weight: 500;
-  min-width: 100px;
+  margin-top: var(--sp-1);
+  line-height: 1.5;
 }
 
-.gauge-fits { color: var(--success); font-weight: 500; }
-.gauge-warn { color: var(--warning); font-weight: 500; }
-.gauge-fail { color: var(--error); font-weight: 500; }
+/* ── Gauge cards ── */
+
+.gauge-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.gauge-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  border-left: 3px solid var(--border-default);
+}
+
+.gauge-card-fit  { border-left-color: var(--success); }
+.gauge-card-warn { border-left-color: var(--warning); }
+.gauge-card-fail { border-left-color: var(--error); }
+
+.gauge-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--sp-3);
+}
+
+.gauge-card-name {
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.gauge-card-contact {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.gauge-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.gauge-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--sp-1) 0;
+}
+
+.gauge-card-dt {
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.gauge-card-dd {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.gauge-card-status {
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  padding: var(--sp-2) 0;
+  margin-top: var(--sp-1);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.gauge-card-status.gauge-card-fit  { color: var(--success); }
+.gauge-card-status.gauge-card-warn { color: var(--warning); }
+.gauge-card-status.gauge-card-fail { color: var(--error); }
+
+.gauge-card-note {
+  font-family: var(--font);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.gauge-card-unspecified {
+  font-family: var(--font);
+  font-size: 13px;
+  color: var(--text-disabled);
+}
+
+/* ── Catalog references ── */
+
+.catalog-refs {
+  display: flex;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
 
 /* ── Part number builder ── */
 
@@ -669,12 +763,12 @@ input::placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
 }
 
 .pn-segment-label {
   font-family: var(--font);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   color: var(--text-disabled);
   text-transform: uppercase;
@@ -683,18 +777,18 @@ input::placeholder {
 
 .pn-segment-value {
   font-family: var(--mono);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
-  height: 32px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--bg-elevated);
   border: 1px solid var(--border-default);
   border-radius: var(--r-sm);
-  padding: 0 var(--sp-2);
+  padding: 0 var(--sp-3);
   color: var(--text-secondary);
-  min-width: 36px;
+  min-width: 40px;
 }
 
 .pn-segment-value.fixed {
@@ -704,11 +798,15 @@ input::placeholder {
   font-weight: 600;
 }
 
+.pn-segment-value.muted {
+  color: var(--text-disabled);
+}
+
 .pn-sep {
   font-family: var(--mono);
   color: var(--text-disabled);
-  font-size: 14px;
-  height: 32px;
+  font-size: 15px;
+  height: 36px;
   display: flex;
   align-items: center;
   padding: 0 2px;
@@ -725,15 +823,24 @@ input::placeholder {
 .keyway-item {
   display: flex;
   align-items: center;
-  gap: var(--sp-1);
-  height: 28px;
-  padding: 0 var(--sp-2);
+  gap: 6px;
+  height: 32px;
+  padding: 0 var(--sp-3);
   border: 1px solid var(--border-subtle);
   border-radius: var(--r-sm);
-  font-family: var(--mono);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   background: var(--bg-elevated);
+}
+
+.keyway-code {
+  font-family: var(--mono);
+}
+
+.keyway-color {
+  font-family: var(--font);
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
 .keyway-item.available { color: var(--text-primary); }
@@ -750,9 +857,9 @@ input::placeholder {
 
 .variant-badge {
   font-family: var(--font);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
-  height: 26px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   padding: 0 var(--sp-3);
@@ -777,21 +884,21 @@ input::placeholder {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--sp-2) var(--sp-5);
-  font-size: 13px;
+  font-size: 14px;
   align-items: baseline;
 }
 
 .bom-grid dt {
   font-family: var(--font);
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
 }
 
 .bom-grid dd {
   font-family: var(--mono);
   color: var(--text-primary);
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1150,28 +1257,35 @@ input::placeholder {
   .detail-view {
     grid-template-columns: 1fr;
     padding: var(--sp-5) var(--sp-4);
-    gap: var(--sp-5);
+    gap: var(--sp-6);
   }
   .detail-section.full-width { grid-column: 1; }
-  .detail-label { font-size: 12px; }
-  .detail-value { font-size: 14px; }
+  .detail-label { font-size: 14px; margin-bottom: var(--sp-3); }
+  .detail-value { font-size: 16px; }
+  .detail-value-lg { font-size: 20px; }
+  .detail-sub { font-size: 14px; }
 
-  .gauge-row {
-    flex-wrap: wrap;
-    gap: var(--sp-1);
-    font-size: 13px;
-    padding: var(--sp-3) 0;
-  }
-  .gauge-row .group-name { min-width: unset; width: 100%; font-size: 14px; }
+  .gauge-card { padding: var(--sp-4); }
+  .gauge-card-name { font-size: 16px; }
+  .gauge-card-contact { font-size: 14px; }
+  .gauge-card-dt { font-size: 14px; }
+  .gauge-card-dd { font-size: 16px; }
+  .gauge-card-status { font-size: 15px; }
+  .gauge-card-note { font-size: 13px; }
 
-  .bom-grid { font-size: 14px; gap: var(--sp-2) var(--sp-5); }
-  .bom-grid dt { font-size: 13px; }
+  .bom-grid { font-size: 16px; gap: var(--sp-3) var(--sp-5); }
+  .bom-grid dt { font-size: 14px; }
+  .bom-grid dd { font-size: 15px; }
 
-  .variant-badge { font-size: 12px; height: 30px; padding: 0 var(--sp-3); }
-  .keyway-item { height: 32px; font-size: 12px; padding: 0 var(--sp-3); }
+  .variant-badge { font-size: 14px; height: 36px; padding: 0 var(--sp-4); }
+  .keyway-item { height: 36px; font-size: 14px; padding: 0 var(--sp-3); gap: var(--sp-2); }
+  .keyway-color { font-size: 12px; }
 
-  .pn-segment-value { font-size: 15px; height: 36px; min-width: 36px; }
-  .pn-segment-label { font-size: 10px; }
+  .pn-segment-value { font-size: 16px; height: 40px; min-width: 40px; padding: 0 var(--sp-3); }
+  .pn-segment-label { font-size: 11px; }
+  .pn-sep { font-size: 16px; height: 40px; }
+
+  .catalog-refs { font-size: 14px; gap: var(--sp-3); }
 
   .xref-exact-header { flex-direction: column; gap: var(--sp-1); }
   .xref-compare-table { display: block; overflow-x: auto; }
