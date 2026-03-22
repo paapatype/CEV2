@@ -13,71 +13,83 @@ function tagClass(tag) {
   return 'tag tag-oversized';
 }
 
-/** Custom horizontal scroll track — sits above and below the table */
+/** Custom horizontal scroll track — sits above and below the table.
+ *  Uses RAF polling for reliable tracking during momentum scroll on iOS. */
 function ScrollTrack({ scrollRef }) {
   const trackRef = useRef(null);
-  const [thumbStyle, setThumbStyle] = useState({ width: '100%', left: '0%' });
+  const thumbRef = useRef(null);
+  const rafId = useRef(null);
+  const lastScroll = useRef(-1);
   const [visible, setVisible] = useState(false);
-  const dragging = useRef(false);
-  const dragStartX = useRef(0);
-  const dragStartScroll = useRef(0);
 
-  const update = useCallback(() => {
+  // Continuously poll scroll position via RAF — works during momentum scroll
+  const tick = useCallback(() => {
     const el = scrollRef.current;
-    if (!el) return;
+    const thumb = thumbRef.current;
+    const track = trackRef.current;
+    if (!el || !thumb || !track) { rafId.current = requestAnimationFrame(tick); return; }
+
     const { scrollWidth, clientWidth, scrollLeft } = el;
-    if (scrollWidth <= clientWidth) { setVisible(false); return; }
-    setVisible(true);
-    const ratio = clientWidth / scrollWidth;
-    const thumbW = Math.max(ratio * 100, 15);
-    const thumbL = (scrollLeft / (scrollWidth - clientWidth)) * (100 - thumbW);
-    setThumbStyle({ width: `${thumbW}%`, left: `${thumbL}%` });
-  }, [scrollRef]);
+
+    if (scrollWidth <= clientWidth) {
+      if (visible) setVisible(false);
+    } else {
+      if (!visible) setVisible(true);
+      // Only update DOM when scroll position actually changed
+      if (scrollLeft !== lastScroll.current) {
+        lastScroll.current = scrollLeft;
+        const ratio = clientWidth / scrollWidth;
+        const thumbW = Math.max(ratio * 100, 15);
+        const thumbL = (scrollLeft / (scrollWidth - clientWidth)) * (100 - thumbW);
+        thumb.style.width = `${thumbW}%`;
+        thumb.style.left = `${thumbL}%`;
+      }
+    }
+
+    rafId.current = requestAnimationFrame(tick);
+  }, [scrollRef, visible]);
 
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.addEventListener('scroll', update, { passive: true });
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    update();
-    return () => { el.removeEventListener('scroll', update); ro.disconnect(); };
-  }, [scrollRef, update]);
+    rafId.current = requestAnimationFrame(tick);
+    return () => { if (rafId.current) cancelAnimationFrame(rafId.current); };
+  }, [tick]);
 
+  // Drag to scroll
   const onPointerDown = (e) => {
     e.preventDefault();
-    dragging.current = true;
-    dragStartX.current = e.clientX;
-    dragStartScroll.current = scrollRef.current?.scrollLeft || 0;
-    document.addEventListener('pointermove', onPointerMove);
-    document.addEventListener('pointerup', onPointerUp);
-  };
+    const startX = e.clientX;
+    const startScroll = scrollRef.current?.scrollLeft || 0;
 
-  const onPointerMove = (e) => {
-    if (!dragging.current || !scrollRef.current || !trackRef.current) return;
-    const trackW = trackRef.current.clientWidth;
-    const { scrollWidth, clientWidth } = scrollRef.current;
-    const delta = e.clientX - dragStartX.current;
-    const scrollRange = scrollWidth - clientWidth;
-    const ratio = clientWidth / scrollWidth;
-    const thumbW = Math.max(ratio, 0.15);
-    const trackRange = trackW * (1 - thumbW);
-    scrollRef.current.scrollLeft = dragStartScroll.current + (delta / trackRange) * scrollRange;
-  };
+    const onMove = (ev) => {
+      const el = scrollRef.current;
+      const track = trackRef.current;
+      if (!el || !track) return;
+      const { scrollWidth, clientWidth } = el;
+      const ratio = clientWidth / scrollWidth;
+      const thumbW = Math.max(ratio, 0.15);
+      const trackRange = track.clientWidth * (1 - thumbW);
+      const scrollRange = scrollWidth - clientWidth;
+      el.scrollLeft = startScroll + ((ev.clientX - startX) / trackRange) * scrollRange;
+    };
 
-  const onPointerUp = () => {
-    dragging.current = false;
-    document.removeEventListener('pointermove', onPointerMove);
-    document.removeEventListener('pointerup', onPointerUp);
-  };
+    const onUp = () => {
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
+    };
 
-  if (!visible) return null;
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+  };
 
   return (
-    <div className="scroll-track" ref={trackRef}>
+    <div
+      className="scroll-track"
+      ref={trackRef}
+      style={{ display: visible ? 'block' : 'none' }}
+    >
       <div
         className="scroll-thumb"
-        style={thumbStyle}
+        ref={thumbRef}
         onPointerDown={onPointerDown}
       />
     </div>
